@@ -1,13 +1,13 @@
 import './GrammarPanel.css';
 
 const TYPE_CONFIG = {
-  'passive-voice':  { label: 'Passive Voice',  color: '#d97706', bg: '#fef3c7' },
-  'weasel-word':    { label: 'Weasel Word',     color: '#7c3aed', bg: '#ede9fe' },
-  'adverb':         { label: 'Adverb',          color: '#0369a1', bg: '#e0f2fe' },
-  'wordy':          { label: 'Wordy Phrase',    color: '#b91c1c', bg: '#fee2e2' },
-  'repeated-word':  { label: 'Repeated Word',   color: '#be185d', bg: '#fce7f3' },
-  'sentence-start': { label: 'Sentence Start',  color: '#065f46', bg: '#d1fae5' },
-  'style':          { label: 'Style Tip',       color: '#475569', bg: '#f1f5f9' },
+  'spelling': { label: 'Spelling', color: '#dc2626', bg: '#fee2e2' },
+  'grammar': { label: 'Grammar', color: '#d97706', bg: '#fef3c7' },
+  'punctuation': { label: 'Punctuation', color: '#0369a1', bg: '#e0f2fe' },
+  'passive-voice': { label: 'Passive Voice', color: '#7c3aed', bg: '#ede9fe' },
+  'wordy': { label: 'Wordy Phrase', color: '#b91c1c', bg: '#fee2e2' },
+  'repeated-word': { label: 'Repeated Word', color: '#be185d', bg: '#fce7f3' },
+  'style': { label: 'Style Tip', color: '#475569', bg: '#f1f5f9' },
 };
 
 function ScoreRing({ score }) {
@@ -81,6 +81,11 @@ function GrammarPanel({ grammar, onClose }) {
                         </span>
                       </div>
                       <p className="gp-suggestion-reason">{s.reason}</p>
+                      {s.replacements?.length > 0 && (
+                        <p className="gp-suggestion-fix">
+                          ✅ {s.replacements.join(' / ')}
+                        </p>
+                      )}
                     </li>
                   );
                 })}

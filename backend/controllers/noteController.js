@@ -1,6 +1,5 @@
 const Note = require('../models/Note');
 const { marked } = require('marked');
-const writeGood = require('write-good');
 
 marked.setOptions({ breaks: true, gfm: true });
 
@@ -17,14 +16,17 @@ const stripMarkdown = (md) =>
     .replace(/\n{2,}/g, ' ')
     .trim();
 
-const categorize = (reason) => {
-  if (/passive voice/i.test(reason)) return 'passive-voice';
-  if (/weasel/i.test(reason)) return 'weasel-word';
-  if (/adverb/i.test(reason)) return 'adverb';
-  if (/wordy/i.test(reason)) return 'wordy';
-  if (/lexical illusion/i.test(reason)) return 'repeated-word';
-  if (/so at the beginning/i.test(reason)) return 'sentence-start';
-  return 'style';
+const categorize = (categoryId) => {
+  const map = {
+    TYPOS: 'spelling',
+    GRAMMAR: 'grammar',
+    PUNCTUATION: 'punctuation',
+    STYLE: 'style',
+    CASING: 'style',
+    CONFUSED_WORDS: 'grammar',
+    REDUNDANCY: 'wordy',
+  };
+  return map[categoryId] || 'style';
 };
 
 const calculateScore = (suggestions, wordCount) => {
@@ -143,18 +145,38 @@ const checkGrammar = async (req, res) => {
     if (!text || text.trim().length === 0) {
       return res.status(400).json({ success: false, message: 'Text is required for grammar check' });
     }
+
     const plainText = stripMarkdown(text);
-    const rawSuggestions = writeGood(plainText);
-    const suggestions = rawSuggestions.map((s) => ({
-      index: s.index,
-      offset: s.offset,
-      word: plainText.substr(s.index, s.offset),
-      reason: s.reason,
-      type: categorize(s.reason),
+
+    const params = new URLSearchParams();
+    params.append('text', plainText);
+    params.append('language', 'en-US');
+
+    const response = await fetch('https://api.languagetool.org/v2/check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString(),
+      signal: AbortSignal.timeout(10000),
+    });
+
+    const data = await response.json();
+
+    const suggestions = data.matches.map((match) => ({
+      index: match.offset,
+      offset: match.length,
+      word: plainText.substr(match.offset, match.length),
+      reason: match.message,
+      type: categorize(match.rule.category.id),
+      replacements: match.replacements.slice(0, 3).map((r) => r.value),
     }));
+
     const wordCount = plainText.split(/\s+/).filter((w) => w.length > 0).length;
     const score = calculateScore(suggestions, wordCount);
-    res.json({ success: true, data: { suggestions, score, wordCount, issueCount: suggestions.length } });
+
+    res.json({
+      success: true,
+      data: { suggestions, score, wordCount, issueCount: suggestions.length },
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

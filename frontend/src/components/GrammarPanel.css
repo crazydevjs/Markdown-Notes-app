@@ -211,6 +211,13 @@
   margin: 0;
 }
 
+.gp-suggestion-fix {
+  font-size: 0.82rem;
+  color: #16a34a;
+  font-weight: 600;
+  margin: 0.25rem 0 0 0;
+}
+
 .gp-legend {
   display: flex;
   flex-wrap: wrap;
