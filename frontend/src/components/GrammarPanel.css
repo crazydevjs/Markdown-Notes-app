@@ -211,6 +211,38 @@
   margin: 0;
 }
 
+.gp-fix-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.gp-fix-label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.gp-fix-btn {
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  font-family: monospace;
+}
+
+.gp-fix-btn:hover {
+  background: #dcfce7;
+  border-color: #86efac;
+}
+
 .gp-suggestion-fix {
   font-size: 0.82rem;
   color: #16a34a;

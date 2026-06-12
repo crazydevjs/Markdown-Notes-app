@@ -21,7 +21,7 @@ function ScoreRing({ score }) {
   );
 }
 
-function GrammarPanel({ grammar, onClose }) {
+function GrammarPanel({ grammar, onClose, onApplyFix }) {
   const { suggestions, score, wordCount, issueCount } = grammar;
 
   return (
@@ -82,9 +82,18 @@ function GrammarPanel({ grammar, onClose }) {
                       </div>
                       <p className="gp-suggestion-reason">{s.reason}</p>
                       {s.replacements?.length > 0 && (
-                        <p className="gp-suggestion-fix">
-                          ✅ {s.replacements.join(' / ')}
-                        </p>
+                        <div className="gp-fix-row">
+                          <span className="gp-fix-label">Fix:</span>
+                          {s.replacements.map((r, ri) => (
+                            <button
+                              key={ri}
+                              className="gp-fix-btn"
+                              onClick={() => onApplyFix(i, s.word, r)}
+                            >
+                              {r}
+                            </button>
+                          ))}
+                        </div>
                       )}
                     </li>
                   );
