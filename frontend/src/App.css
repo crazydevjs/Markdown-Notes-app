@@ -1,0 +1,13 @@
+/* App.css — App-level layout wrapper */
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Push content below the fixed 60px navbar */
+.app-main {
+  flex: 1;
+  margin-top: 60px;
+}

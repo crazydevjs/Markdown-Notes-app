@@ -1,0 +1,66 @@
+/* Navbar.css */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: #0f172a; /* Deep slate — editor-tool feel */
+  border-bottom: 1px solid #1e293b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 1000;
+  box-shadow: 0 1px 8px rgb(0 0 0 / 0.25);
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  transition: opacity var(--transition);
+}
+.navbar-logo:hover { opacity: 0.85; }
+.navbar-logo svg {
+  width: 22px;
+  height: 22px;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+.navbar-logo span {
+  background: linear-gradient(135deg, #a5b4fc, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.navbar-divider {
+  width: 1px;
+  height: 20px;
+  background: #334155;
+  margin: 0 16px;
+}
+
+.navbar-tagline {
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 400;
+}
+
+@media (max-width: 520px) {
+  .navbar-divider,
+  .navbar-tagline { display: none; }
+}

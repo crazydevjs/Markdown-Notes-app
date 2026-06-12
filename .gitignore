@@ -1,0 +1,32 @@
+# ── Node / npm ──────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ── Environment variables (NEVER commit secrets) ─────────────────
+.env
+.env.local
+.env.production
+.env.development
+
+# ── Vite build output ────────────────────────────────────────────
+frontend/dist/
+frontend/.vite/
+
+# ── OS files ─────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Editor / IDE ─────────────────────────────────────────────────
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# ── Logs ─────────────────────────────────────────────────────────
+logs/
+*.log
+
+# ── Uploaded files (if you ever add disk storage) ────────────────
+uploads/

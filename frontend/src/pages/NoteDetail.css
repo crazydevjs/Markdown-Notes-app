@@ -1,0 +1,131 @@
+/* ── Wrapper ── */
+.nd-wrapper {
+  min-height: calc(100vh - 60px);
+  background: var(--bg);
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* ── Article Card ── */
+.nd-article {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  max-width: 780px;
+  width: 100%;
+  padding: 2.5rem 3rem;
+}
+
+/* ── Back Button ── */
+.nd-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0;
+  margin-bottom: 1.5rem;
+  font-family: var(--font-sans);
+  transition: opacity 0.15s;
+}
+
+.nd-back:hover {
+  opacity: 0.7;
+}
+
+/* ── Header ── */
+.nd-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.nd-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.nd-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.nd-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.nd-stats {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+/* ── Rendered Body ── */
+.nd-body {
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+/* ── State screens (loading / error) ── */
+.nd-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  min-height: calc(100vh - 60px);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.nd-state--error {
+  color: #b91c1c;
+}
+
+.nd-state-icon {
+  font-size: 2.5rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  .nd-article {
+    padding: 1.75rem 1.5rem;
+  }
+
+  .nd-title {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nd-article {
+    padding: 1.25rem 1rem;
+    border-radius: 8px;
+  }
+
+  .nd-title {
+    font-size: 1.35rem;
+  }
+
+  .nd-stats {
+    margin-left: 0;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+}
