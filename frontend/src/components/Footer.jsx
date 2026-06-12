@@ -4,7 +4,7 @@ function Footer() {
   return (
     <footer className="footer">
       <a
-        href="https://crazydevjs.github.io/crazydev.github.io/"
+        href="https://crazydev-github-io.vercel.app/"
         target="_blank"
         rel="noopener noreferrer"
         className="footer-link"
