@@ -151,6 +151,34 @@
   margin: 0 0 0.75rem 0;
 }
 
+.gp-body-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.gp-body-header .gp-body-title {
+  margin-bottom: 0;
+}
+
+.gp-fix-all-btn {
+  background: #6366f1;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.gp-fix-all-btn:hover {
+  background: #4f46e5;
+}
+
 .gp-perfect {
   display: flex;
   flex-direction: column;

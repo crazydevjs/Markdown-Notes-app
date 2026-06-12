@@ -72,6 +72,19 @@ export default function Editor({ selectedNote, onSaved, onCancel }) {
     });
   }, []);
 
+  const handleFixAll = useCallback(() => {
+    setContent((prev) => {
+      let fixed = prev;
+      grammarData.suggestions.forEach((s) => {
+        if (s.replacements?.length > 0) {
+          fixed = fixed.replace(s.word, s.replacements[0]);
+        }
+      });
+      return fixed;
+    });
+    setGrammarData((prev) => ({ ...prev, suggestions: [], issueCount: 0 }));
+  }, [grammarData]);
+
   const handleGrammarCheck = useCallback(async () => {
     if (!content.trim()) { setError('Write some content first.'); return; }
     setChecking(true);
@@ -191,6 +204,7 @@ export default function Editor({ selectedNote, onSaved, onCancel }) {
           grammar={grammarData}
           onClose={() => setShowGrammar(false)}
           onApplyFix={handleApplyFix}
+          onFixAll={handleFixAll}
         />
       )}
     </div>

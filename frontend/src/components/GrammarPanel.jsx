@@ -21,7 +21,7 @@ function ScoreRing({ score }) {
   );
 }
 
-function GrammarPanel({ grammar, onClose, onApplyFix }) {
+function GrammarPanel({ grammar, onClose, onApplyFix, onFixAll }) {
   const { suggestions, score, wordCount, issueCount } = grammar;
 
   return (
@@ -66,7 +66,12 @@ function GrammarPanel({ grammar, onClose, onApplyFix }) {
             </div>
           ) : (
             <>
-              <p className="gp-body-title">{issueCount} suggestion{issueCount !== 1 ? 's' : ''}:</p>
+              <div className="gp-body-header">
+                <p className="gp-body-title">{issueCount} suggestion{issueCount !== 1 ? 's' : ''}:</p>
+                <button className="gp-fix-all-btn" onClick={onFixAll}>
+                  ⚡ Fix All
+                </button>
+              </div>
               <ul className="gp-suggestion-list">
                 {suggestions.map((s, i) => {
                   const cfg = TYPE_CONFIG[s.type] || TYPE_CONFIG.style;
