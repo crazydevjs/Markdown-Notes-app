@@ -1,58 +1,51 @@
-import { useState, useRef, useCallback, useEffect } from "react";
-import { marked } from "marked";
-import GrammarPanel from "./GrammarPanel";
-import { checkGrammar, createNote, updateNote } from "../services/api";
-import "./Editor.css";
+import { useState, useRef, useCallback, useEffect } from 'react';
+import { marked } from 'marked';
+import GrammarPanel from './GrammarPanel';
+import { checkGrammar, createNote, updateNote } from '../services/api';
+import './Editor.css';
 
-// Configure marked once
 marked.setOptions({ gfm: true, breaks: true });
 
 export default function Editor({ selectedNote, onSaved, onCancel }) {
-  const [tab, setTab] = useState("write"); // "write" | "preview"
-  const [title, setTitle]     = useState("");
-  const [content, setContent] = useState("");
-  const [tags, setTags]       = useState("");
-  const [saving, setSaving]   = useState(false);
+  const [tab, setTab] = useState('write');
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [tags, setTags] = useState('');
+  const [saving, setSaving] = useState(false);
   const [checking, setChecking] = useState(false);
   const [grammarData, setGrammarData] = useState(null);
   const [showGrammar, setShowGrammar] = useState(false);
-  const [error, setError]     = useState("");
+  const [error, setError] = useState('');
   const fileInputRef = useRef(null);
   const isEditing = Boolean(selectedNote);
 
-  // Populate form when a note is selected for editing
   useEffect(() => {
     if (selectedNote) {
-      setTitle(selectedNote.title || "");
-      setContent(selectedNote.content || "");
-      setTags(selectedNote.tags ? selectedNote.tags.join(", ") : "");
-      setTab("write");
-      setError("");
+      setTitle(selectedNote.title || '');
+      setContent(selectedNote.content || '');
+      setTags(selectedNote.tags ? selectedNote.tags.join(', ') : '');
+      setTab('write');
+      setError('');
       setGrammarData(null);
       setShowGrammar(false);
     } else {
-      setTitle("");
-      setContent("");
-      setTags("");
-      setError("");
+      setTitle('');
+      setContent('');
+      setTags('');
+      setError('');
       setGrammarData(null);
       setShowGrammar(false);
     }
   }, [selectedNote]);
 
-  // Parse tags string → array
   const parseTags = (str) =>
-    str
-      .split(",")
-      .map((t) => t.trim().toLowerCase())
-      .filter(Boolean);
+    str.split(',').map((t) => t.trim().toLowerCase()).filter(Boolean);
 
-  // Save / Update note
   const handleSave = useCallback(async () => {
-    if (!title.trim()) { setError("Title is required."); return; }
-    if (!content.trim()) { setError("Content cannot be empty."); return; }
+    if (!title.trim()) { setError('Title is required.'); return; }
+    if (!content.trim()) { setError('Content cannot be empty.'); return; }
     setSaving(true);
-    setError("");
+    setError('');
     try {
       const payload = { title: title.trim(), content, tags: parseTags(tags) };
       let saved;
@@ -63,60 +56,46 @@ export default function Editor({ selectedNote, onSaved, onCancel }) {
         const res = await createNote(payload);
         saved = res.data.data;
       }
-      onSaved(saved, isEditing ? "updated" : "created");
+      onSaved(saved, isEditing ? 'updated' : 'created');
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to save note.");
+      setError(err.response?.data?.message || 'Failed to save note.');
     } finally {
       setSaving(false);
     }
   }, [title, content, tags, isEditing, selectedNote, onSaved]);
 
-  // Grammar check
   const handleGrammarCheck = useCallback(async () => {
-    if (!content.trim()) { setError("Write some content first."); return; }
+    if (!content.trim()) { setError('Write some content first.'); return; }
     setChecking(true);
-    setError("");
+    setError('');
     try {
       const res = await checkGrammar(content);
       setGrammarData(res.data.data);
       setShowGrammar(true);
     } catch (err) {
-      setError(err.response?.data?.message || "Grammar check failed.");
+      setError(err.response?.data?.message || 'Grammar check failed.');
     } finally {
       setChecking(false);
     }
   }, [content]);
 
-  // .md file upload
   const handleFileChange = useCallback((e) => {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (evt) => {
-      const text = evt.target.result;
-      // Use filename (without ext) as title if title is empty
-      if (!title) {
-        setTitle(file.name.replace(/\.(md|markdown)$/i, ""));
-      }
-      setContent(text);
-      setTab("write");
+      if (!title) setTitle(file.name.replace(/\.(md|markdown)$/i, ''));
+      setContent(evt.target.result);
+      setTab('write');
     };
     reader.readAsText(file);
-    // Reset so same file can be re-selected
-    e.target.value = "";
+    e.target.value = '';
   }, [title]);
 
-  const handleNewNote = () => {
-    if (onCancel) onCancel();
-  };
-
-  const wordCount = content.trim()
-    ? content.trim().split(/\s+/).length
-    : 0;
+  const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
 
   return (
     <div className="editor">
-      {/* ── Top Bar ── */}
       <div className="editor-topbar">
         <input
           className="editor-title-input"
@@ -128,79 +107,57 @@ export default function Editor({ selectedNote, onSaved, onCancel }) {
         />
         <div className="editor-topbar-actions">
           {isEditing && (
-            <button className="btn btn-ghost" onClick={handleNewNote}>
-              + New
-            </button>
+            <button className="btn btn-ghost" onClick={onCancel}>+ New</button>
           )}
-          <button
-            className="btn btn-outline"
-            onClick={() => fileInputRef.current.click()}
-            title="Upload .md file"
-          >
+          <button className="btn btn-outline" onClick={() => fileInputRef.current.click()}>
             📂 Upload
           </button>
-          <button
-            className="btn btn-outline"
-            onClick={handleGrammarCheck}
-            disabled={checking}
-          >
-            {checking ? "Checking…" : "✏️ Grammar"}
+          <button className="btn btn-outline" onClick={handleGrammarCheck} disabled={checking}>
+            {checking ? 'Checking…' : '✏️ Grammar'}
           </button>
-          <button
-            className="btn btn-primary"
-            onClick={handleSave}
-            disabled={saving}
-          >
-            {saving ? "Saving…" : isEditing ? "Update" : "Save Note"}
+          <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
+            {saving ? 'Saving…' : isEditing ? 'Update' : 'Save Note'}
           </button>
           <input
             ref={fileInputRef}
             type="file"
             accept=".md,.markdown"
-            style={{ display: "none" }}
+            style={{ display: 'none' }}
             onChange={handleFileChange}
           />
         </div>
       </div>
 
-      {/* ── Tags ── */}
       <div className="editor-tags-row">
         <span className="editor-tags-icon">🏷️</span>
         <input
           className="editor-tags-input"
           type="text"
-          placeholder="Add tags, comma-separated (e.g. work, ideas)"
+          placeholder="Tags, comma-separated (e.g. work, ideas)"
           value={tags}
           onChange={(e) => setTags(e.target.value)}
         />
       </div>
 
-      {/* ── Error ── */}
       {error && <div className="editor-error">{error}</div>}
 
-      {/* ── Tabs ── */}
       <div className="editor-tabs">
         <button
-          className={`editor-tab ${tab === "write" ? "editor-tab--active" : ""}`}
-          onClick={() => setTab("write")}
-        >
-          ✍️ Write
-        </button>
+          className={`editor-tab ${tab === 'write' ? 'editor-tab--active' : ''}`}
+          onClick={() => setTab('write')}
+        >✍️ Write</button>
         <button
-          className={`editor-tab ${tab === "preview" ? "editor-tab--active" : ""}`}
-          onClick={() => setTab("preview")}
-        >
-          👁️ Preview
-        </button>
+          className={`editor-tab ${tab === 'preview' ? 'editor-tab--active' : ''}`}
+          onClick={() => setTab('preview')}
+        >👁️ Preview</button>
         <span className="editor-word-count">{wordCount} words</span>
       </div>
 
-      {/* ── Write / Preview Pane ── */}
       <div className="editor-pane">
-        {tab === "write" ? (
+        {tab === 'write' ? (
           <textarea
             className="editor-textarea"
-            placeholder={"# Your note title\n\nStart writing in **Markdown**...\n\n- Use `code` for inline code\n- Add **bold** and _italic_ text\n- Create lists, links, and more!"}
+            placeholder={"# Your note title\n\nStart writing in **Markdown**..."}
             value={content}
             onChange={(e) => setContent(e.target.value)}
             spellCheck={false}
@@ -214,14 +171,13 @@ export default function Editor({ selectedNote, onSaved, onCancel }) {
               />
             ) : (
               <div className="editor-preview-empty">
-                <span>Nothing to preview yet. Switch to Write and add some content.</span>
+                <span>Nothing to preview yet.</span>
               </div>
             )}
           </div>
         )}
       </div>
 
-      {/* ── Grammar Panel (floating) ── */}
       {showGrammar && grammarData && (
         <GrammarPanel
           grammar={grammarData}
