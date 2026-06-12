@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
+import Footer from './components/Footer.jsx';
 import Home from './pages/Home.jsx';
 import NoteDetail from './pages/NoteDetail.jsx';
 import './App.css';
@@ -15,6 +16,7 @@ function App() {
             <Route path="/notes/:id" element={<NoteDetail />} />
           </Routes>
         </main>
+        <Footer />
       </div>
     </Router>
   );

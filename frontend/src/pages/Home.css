@@ -1,7 +1,7 @@
 /* ── Home Layout ── */
 .home {
   display: flex;
-  height: calc(100vh - 60px); /* subtract navbar height */
+  height: calc(100vh - 108px); 
   overflow: hidden;
   background: var(--bg);
 }
