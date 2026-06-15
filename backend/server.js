@@ -15,16 +15,26 @@ const allowedOrigins = [
   'http://localhost:3000',
 ].filter(Boolean);
 
+// Allow configured origins, local dev, and any Vercel deployment
+// (production + preview URLs) so the API keeps working even if
+// FRONTEND_URL isn't set to the exact current frontend URL.
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true; // non-browser clients (curl, server-to-server)
+  if (allowedOrigins.some((o) => origin.startsWith(o.replace(/\/$/, '')))) {
+    return true;
+  }
+  try {
+    return new URL(origin).hostname.endsWith('.vercel.app');
+  } catch {
+    return false;
+  }
+};
+
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
-      const match = allowedOrigins.some((o) =>
-        origin.startsWith(o.replace(/\/$/, ''))
-      );
-      if (match) return callback(null, true);
-      callback(new Error('CORS: origin not allowed'));
-    },
+    // Return false (not throw) for disallowed origins — the browser still
+    // blocks the request, but we avoid noisy 500s in the logs.
+    origin: (origin, callback) => callback(null, isAllowedOrigin(origin)),
     credentials: true,
   })
 );
